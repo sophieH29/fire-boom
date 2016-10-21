@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <title>Booom</title>
+  <link rel="manifest" href="manifest.json">
+  <!-- Older Chrome configuration -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Booom">
+  <link rel="icon"
+        sizes="192x192"
+        href="images/boom1.png">
+
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="bower_components/web-animations-js/web-animations.min.js"></script>
+  <link rel="import" href="bower_components/platinum-sw/platinum-sw-elements.html">
+  <link rel="import" href="bower_components/polymerfire/firebase-app.html">
+  <link rel="import" href="fire-boom.html">
+</head>
+<body>
+
+<platinum-sw-register
+        auto-register
+        skip-waiting
+        clients-claim
+        reload-on-install
+        href="sw-import.js">
+  <platinum-sw-cache
+          default-cache-strategy="networkFirst">
+  </platinum-sw-cache>
+</platinum-sw-register>
+
+<firebase-app
+        name="fire-boom"
+        api-key="AIzaSyCbRCd8d1AVH65AqMs8IDxHFX3l5mm_qj4"
+        auth-domain="fire-boom.firebaseapp.com"
+        database-url="https://fire-boom.firebaseio.com"
+        storage-bucket="fire-boom.appspot.com"
+        messaging-sender-id="207087349949">
+</firebase-app>
+
+<fire-boom></fire-boom>
+
+<script type="application/javascript">
+  document.getElementById('s1').inputTarget = document.getElementById('a1');
+</script>
+</body>
+</html>
