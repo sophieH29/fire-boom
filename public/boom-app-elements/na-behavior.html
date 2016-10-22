@@ -37,12 +37,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var noteElement = Polymer.dom(event).localTarget;
           this.editableNoteId = this.toEditableId(noteElement.id);
 
-            if (noteElement.__data__.uid !== this.user.uid) {
-                return;
-            }
+           this.$.document.transactionsComplete.then(function() {
+              if (event.target.nodeName.toLowerCase() === "iron-icon")
+              {
+                  this.toggleLikes(noteElement);
+              }
+              else {
+                  if (noteElement.__data__.uid !== this.user.uid) {
+                      return;
+                  }
+                  this.$.editor.open(noteElement);
+              }
 
-          this.$.document.transactionsComplete.then(function() {
-            this.$.editor.open(noteElement);
           }.bind(this));
         }
       },
@@ -52,6 +58,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.editableNoteId = null;
           this.$.editor.open();
         }
+      },
+
+      toggleLikes: function(noteElement) {
+          var savedLikes = noteElement.querySelector('.favorites .numb-likes');
+          var likes = this.editableNote.likes || [];
+          var index = likes.indexOf(this.user.uid);
+
+          if (index >= 0) {
+              likes.splice(index, 1);
+
+          }
+          else {
+              likes.push(this.user.uid);
+          }
+
+          this.set('editableNote.likes', likes);
+          savedLikes.textContent = likes.length;
+          this.save();
+          if (likes.length > 0) {
+              event.target.icon = 'favorite';
+          }
+          else {
+              event.target.icon = 'favorite-border';
+          }
       },
 
       commitChange: function(event) {
@@ -79,7 +109,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       save: function() {
         if (this.$.document.isNew &&
             (this.editableNote.title ||
-             this.editableNote.body)) {
+             this.editableNote.body ||
+            this.editableNote.likes)) {
           return this.$.document.save(this.notesPath).then(function() {
             this.$.document.reset();
           }.bind(this));
