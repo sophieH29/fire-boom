@@ -37,6 +37,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var noteElement = Polymer.dom(event).localTarget;
           this.editableNoteId = this.toEditableId(noteElement.id);
 
+            if (noteElement.__data__.uid !== this.user.uid) {
+                return;
+            }
+
           this.$.document.transactionsComplete.then(function() {
             this.$.editor.open(noteElement);
           }.bind(this));

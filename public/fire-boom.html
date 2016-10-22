@@ -33,7 +33,7 @@
         <firebase-query
                 id="query"
                 app-name="fire-boom"
-                path="/booms/[[user.uid]]"
+                path="/booms"
                 data="{{notes}}">
         </firebase-query>
 
@@ -56,6 +56,7 @@
 
         <na-editor
                 id="editor"
+                user="[[user]]"
                 note="{{editableNote}}"
                 on-close="commitChange">
         </na-editor>
@@ -64,9 +65,13 @@
             <template is="dom-repeat" items="[[persistedNotes]]" as="note">
                 <na-note
                         id$="[[note.$key]]"
-                        title="[[user.displayName]]"
-                        photo="[[user.photoURL]]"
+                        title="[[note.title]]"
+                        photo="[[note.photoURL]]"
                         body="[[note.body]]"
+                        likes="[[note.likes]]"
+                        uid="[[note.uid]]"
+                        key="[[note.$key]]"
+                        offline="[[!online]]"
                         on-tap="edit">
                 </na-note>
             </template>
@@ -83,7 +88,7 @@
             },
 
             get notesPath() {
-                return '/booms/' + this.user.uid;
+                return '/booms';
             },
 
             toEditableId: function(noteId) {
@@ -95,7 +100,7 @@
             },
 
             observers: [
-                    'userChanged(user)'
+                'userChanged(user)'
             ],
 
             userChanged: function(user) {

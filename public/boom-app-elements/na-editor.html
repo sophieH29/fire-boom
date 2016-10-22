@@ -118,7 +118,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       create: function() {
         this._setOpened(true);
-        this.note = { title: '', body: '' };
+        this.note = { title: this.user.displayName,
+                        body: '',
+                        photoURL : this.user.photoURL,
+                        uid: this.user.uid,
+                        likes: []
+                    };
         this.transitionInFrom(this.getBoundingClientRect());
       },
 

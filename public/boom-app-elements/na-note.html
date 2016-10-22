@@ -1,13 +1,6 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <link rel="import" href="../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-styles/typography.html">
 <link rel="import" href="../bower_components/iron-input/iron-input.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -24,6 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background-color: #fafafa;
         color: #212121;
         padding: 1em;
+        padding-right: 15px;
         @apply(--paper-font-common-base);
         @apply(--shadow-elevation-2dp);
         border-radius: 2px;
@@ -48,6 +42,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-family: 'Roboto Slab', Times New Roman, serif;
       }
 
+      .action-icon {
+        color: var(--paper-deep-orange-a700);
+        transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .action-icon[offline] {
+        opacity: 0.5;
+        cursor: default;
+      }
+
+      .favorites {
+        display: inline-block;
+        color: var(--paper-amber-900);
+        margin-left: 16px;
+        padding: 24px 0px;
+        position: relative;
+        left: 93%;
+        right: 0;
+        bottom: 0;
+      }
+
+      .numb-likes {
+        padding-top: 5px;
+      }
+
       .hidden {
         display: none;
       }
@@ -65,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       p {
         margin: 0;
-        padding-left: 10px;
+        padding-left: 53px;
         font-family: 'Roboto Slab', Times New Roman, serif;
         font-size: 0.9em;
         white-space: pre-wrap;
@@ -111,6 +130,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: bold;
         color: #212121;
       }
+
+      @media (max-width: 640px) {
+        .favorites {
+          left: 80%;
+        }
+      }
+
     </style>
     <template is="dom-if" if="[[editable]]">
       <paper-input-container>
@@ -122,6 +148,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="photo" style="background-image: url('[[photo]]')"></div>
       <h1 class$="[[emptyClass(title)]]">[[title]]</h1>
       <p class$="[[emptyClass(body)]]">[[body]]</p>
+      <div class="favorites">
+        <iron-icon
+          class$="action-icon [[_getMyFavoriteIcon(key)]]"
+          icon="[[_getMyFavoriteIcon(key)]]"
+          on-tap="_toggleLike"
+          offline$="[[offline]]">
+        </iron-icon>
+        <span class="numb-likes">[[_getLikesNumber()]]</span>
+      </div>
     </template>
 
   </template>
@@ -155,6 +190,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: ''
         },
 
+        likes: {
+          type: Array,
+          notify: true,
+          value: []
+        },
+
+        uid: {
+          type: String,
+          notify: true,
+          value: ''
+        },
+
         lastUpdated: {
           type: Number,
           value: 0
@@ -172,6 +219,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
         return true;
+      },
+
+      _getMyFavoriteIcon: function() {
+        if (! this.likes) return 'favorite-border';
+        return this.likes.length > 0 ? 'favorite' : 'favorite-border';
+      },
+
+      _toggleLike: function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        if(this.offline) {
+          return;
+        }
+        var id = e.target.sessionId;
+
+//        if (this.app.user.sessions && this.app.user.sessions[id]) {
+//          this.set('app.user.sessions.'+ id, null);
+//          e.target.icon = 'add';
+//          e.target.classList.remove('remove');
+//        } else {
+//          if (!this.app.user.sessions) {
+//            this.app.user.sessions = {};
+//          }
+//          this.set('app.user.sessions.'+ id, true);
+//          e.target.icon = 'remove';
+//          e.target.classList.add('remove');
+//        }
+      },
+
+      _getLikesNumber: function() {
+        if (! this.likes) return '0';
+        return this.likes.length;
       }
     })
   </script>
