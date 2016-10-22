@@ -225,29 +225,6 @@
         return note.likes.length > 0 ? 'favorite' : 'favorite-border';
       },
 
-      _toggleLike: function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-
-        if(this.offline) {
-          return;
-        }
-        var id = e.target.sessionId;
-
-//        if (this.app.user.sessions && this.app.user.sessions[id]) {
-//          this.set('app.user.sessions.'+ id, null);
-//          e.target.icon = 'add';
-//          e.target.classList.remove('remove');
-//        } else {
-//          if (!this.app.user.sessions) {
-//            this.app.user.sessions = {};
-//          }
-//          this.set('app.user.sessions.'+ id, true);
-//          e.target.icon = 'remove';
-//          e.target.classList.add('remove');
-//        }
-      },
-
       _getLikesNumber: function(note) {
         if (! note.likes) return '0';
         return note.likes.length;
