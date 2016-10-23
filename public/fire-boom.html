@@ -27,20 +27,20 @@
         <firebase-document
                 id="documentUser"
                 app-name="fire-boom"
-                path="/users/[[user.uid]]/prefs"
-                data="[[prefs]]">
+                path="/users/[[user.uid]]/token"
+                data="[[token]]">
         </firebase-document>
 
         <firebase-messaging
                 id="messaging"
                 app-name="fire-boom"
-                token="{{prefs.pushToken}}"
+                token="{{token}}"
                 on-message="handleMessage">
         </firebase-messaging>
 
         <app-indexeddb-mirror
                 session="[[user.uid]]"
-                key="notes"
+                key="booms"
                 data="{{notes}}"
                 persisted-data="{{persistedNotes}}">
         </app-indexeddb-mirror>
@@ -98,6 +98,7 @@
 
             behaviors: [Polymer.NoteAppBehavior],
 
+
             signIn: function() {
                 this.$.auth.signInWithPopup();
             },
@@ -115,17 +116,31 @@
             },
 
             observers: [
-                'userChanged(user)'
+                'userChanged(user)',
+                'tokenChanged(token, user)'
             ],
 
             userChanged: function(user) {
                 if (user) {
-                    console.log(user);
+                    this.$.messaging.requestPermission().then(function() {
+                        console.log('permission was granted');
+                    }, function(err) {
+                        console.log('permission was denied');
+                    });
+                }
+            },
+
+            tokenChanged: function(token) {
+                if (token) {
+                    this.$.documentUser.save('/users/' + this.user.uid, 'token').then(function() {
+                        this.$.documentUser.reset();
+                    }.bind(this));
                 }
             },
 
             handleMessage: function (e, detail) {
                 console.log(e);
+                console.log(detail);
             }
         });
 
