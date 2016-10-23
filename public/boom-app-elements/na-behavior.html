@@ -90,6 +90,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         switch (event.detail) {
           case 'save':
             changeCommits = this.save();
+              this.$.messaging.requestPermission().then(function() {
+                  console.log('permission was granted');
+              }, function(err) {
+                  console.log('permission was denied');
+              });
             break;
           case 'delete':
             changeCommits = this.delete();

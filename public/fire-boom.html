@@ -23,6 +23,21 @@
                 data="{{editableNote}}">
         </firebase-document>
 
+
+        <firebase-document
+                id="documentUser"
+                app-name="fire-boom"
+                path="/users/[[user.uid]]/prefs"
+                data="[[prefs]]">
+        </firebase-document>
+
+        <firebase-messaging
+                id="messaging"
+                app-name="fire-boom"
+                token="{{prefs.pushToken}}"
+                on-message="handleMessage">
+        </firebase-messaging>
+
         <app-indexeddb-mirror
                 session="[[user.uid]]"
                 key="notes"
@@ -107,6 +122,10 @@
                 if (user) {
                     console.log(user);
                 }
+            },
+
+            handleMessage: function (e, detail) {
+                console.log(e);
             }
         });
 
