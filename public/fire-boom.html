@@ -130,9 +130,9 @@
                 }
             },
 
-            tokenChanged: function(token) {
-                if (token) {
-                    this.$.documentUser.save('/users/' + this.user.uid, 'token').then(function() {
+            tokenChanged: function(token, user) {
+                if (token && user) {
+                    this.$.documentUser.save('/users/' + user.uid, 'token').then(function() {
                         this.$.documentUser.reset();
                     }.bind(this));
                 }

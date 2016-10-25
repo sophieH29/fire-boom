@@ -108,9 +108,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       save: function() {
         if (this.$.document.isNew &&
-            (this.editableNote.title ||
-             this.editableNote.body ||
-            this.editableNote.likes)) {
+            this.editableNote.body) {
           return this.$.document.save(this.notesPath).then(function() {
             this.$.document.reset();
           }.bind(this));
