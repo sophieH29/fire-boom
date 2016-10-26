@@ -38,19 +38,19 @@
                 on-message="handleMessage">
         </firebase-messaging>
 
-        <app-indexeddb-mirror
-                session="[[user.uid]]"
-                key="booms"
-                data="{{notes}}"
-                persisted-data="{{persistedNotes}}">
-        </app-indexeddb-mirror>
-
         <firebase-query
                 id="query"
                 app-name="fire-boom"
                 path="/booms"
                 data="{{notes}}">
         </firebase-query>
+
+        <app-indexeddb-mirror
+                session="[[user.uid]]"
+                key="booms"
+                data="{{notes}}"
+                persisted-data="{{persistedNotes}}">
+        </app-indexeddb-mirror>        
 
         <na-toolbar
                 signed-in="[[signedIn]]"
@@ -117,7 +117,7 @@
 
             observers: [
                 'userChanged(user)',
-                'tokenChanged(token, user)'
+                'tokenChanged(token)'
             ],
 
             userChanged: function(user) {
@@ -130,9 +130,9 @@
                 }
             },
 
-            tokenChanged: function(token, user) {
-                if (token && user) {
-                    this.$.documentUser.save('/users/' + user.uid, 'token').then(function() {
+            tokenChanged: function(token) {
+                if (token && this.user) {
+                    this.$.documentUser.save('/users/' + this.user.uid, 'token').then(function() {
                         this.$.documentUser.reset();
                     }.bind(this));
                 }
