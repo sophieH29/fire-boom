@@ -24,5 +24,6 @@ Content-Type: application/json
 
 - Google authentication
 - Real time Firebase database
+- DEMO: https://fire-boom.firebaseapp.com/
 
 Try and enjoy! :)
